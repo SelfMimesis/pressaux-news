@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#13051f">
+  <title>PressAux // Interview Deck</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <main class="stage">
+    <section class="tablet" aria-label="Tablet personal de entrevista">
+      <div id="svgMount" class="tablet-art" aria-hidden="true"></div>
+      <section class="screen" aria-label="Bloc de notas de entrevista">
+        <header class="screen-head">
+          <div><span class="eyebrow">PRESSAUX // FIELD NOTES</span><h1>INTERVIEW LOG</h1></div>
+          <div class="telemetry"><time id="clock">--:--:--</time><span id="elapsed">00:00:00</span></div>
+        </header>
+        <div class="toolbar">
+          <label class="search"><span class="sr-only">Buscar preguntas y notas</span><input id="search" type="search" placeholder="SEARCH QUERY / NOTES" autocomplete="off"></label>
+          <div class="filters" role="group" aria-label="Filtros">
+            <button data-filter="all" class="selected">ALL</button><button data-filter="pending">PENDING</button><button data-filter="completed">DONE</button><button data-filter="favorite">STAR</button>
+          </div>
+        </div>
+        <div class="status-row"><span id="sessionName">SESSION 001</span><strong id="progress">0 / 39</strong><span id="saveState" aria-live="polite">SAVED</span></div>
+        <div id="questionList" class="question-list" tabindex="0" aria-label="39 preguntas de entrevista"></div>
+        <footer class="actions">
+          <button id="newSession">NEW</button><button id="deleteSession">DELETE</button><button id="exportTxt">TXT</button><button id="exportJson">JSON</button><button id="copyActive">COPY</button>
+        </footer>
+      </section>
+    </section>
+    <aside class="side-panel" aria-label="Estado de la entrevista">
+      <span class="eyebrow">LIVE AUXILIARY</span><h2>INTERVIEW DATA</h2>
+      <dl><div><dt>ACTIVE</dt><dd id="sideActive">Q01</dd></div><div><dt>ELAPSED</dt><dd id="sideElapsed">00:00:00</dd></div><div><dt>PROGRESS</dt><dd id="sideProgress">0 / 39</dd></div><div><dt>STORAGE</dt><dd id="sideSave">SAVED</dd></div></dl>
+      <p>↑ ↓ NAVIGATE<br>PAGE UP / DOWN<br>⌘/CTRL + F SEARCH<br>⌘/CTRL + S SAVE</p>
+    </aside>
+  </main>
+  <dialog id="confirmDialog"><form method="dialog"><h2>DELETE SESSION?</h2><p>All notes, markers and interview timing for this session will be erased.</p><div><button value="cancel">CANCEL</button><button id="confirmDelete" value="confirm">CONFIRM</button></div></form></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
