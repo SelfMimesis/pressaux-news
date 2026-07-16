@@ -11,60 +11,21 @@ dialog{max-width:420px;border:1px solid var(--magenta);background:#1d071f;color:
 @keyframes boot{0%{opacity:0;filter:brightness(3) blur(5px)}60%{opacity:1;filter:brightness(1.4)}100%{filter:drop-shadow(0 0 22px rgba(238,48,143,.28))}}@keyframes scan{from{top:0}to{top:100%}}@keyframes cardscan{from{transform:translateY(0)}to{transform:translateY(65px)}}@keyframes pulse{50%{opacity:.15;transform:scale(.4)}}@keyframes drift{50%{opacity:.94;transform:translateY(2px)}}@keyframes noise{to{transform:translate(2%,1%)}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
-/* Glass keyboard v2 — transparent chassis fitted to the supplied green mask. */
-.glass-keyboard{
-  left:19.2%;top:76.8%;width:78.4%;height:13%;padding:.9% 1.1% 1.3%;gap:2%;
-  border:0;background:transparent;box-shadow:none;filter:none;animation:none;
-  clip-path:polygon(0 0,100% 0,100% 63%,95% 63%,89% 88%,85.5% 100%,10% 100%,6% 86%,0 86%);
-}
-.glass-keyboard:before{
-  inset:0;background:linear-gradient(108deg,transparent 15%,rgba(220,239,255,.08) 42%,transparent 62%);
-  opacity:.55;animation:softGlassPass 8s ease-in-out infinite;
-}
-.glass-keyboard .key-row{gap:.7%;padding-inline:0}
-.glass-keyboard .key-row:nth-child(2){padding-inline:2.8% 4%}
-.glass-keyboard .key-row:nth-child(3){padding-inline:6% 7.5%}
-.glass-keyboard .key-controls{padding-inline:3% 11.5%}
-.glass-keyboard button,
-.glass-keyboard .key-row:nth-child(even) button:nth-child(even),
-.glass-keyboard .key-row:nth-child(odd) button:nth-child(3n){
-  position:relative;overflow:hidden;border:1px solid rgba(211,226,240,.28);border-radius:0;
-  clip-path:polygon(9% 0,86% 0,100% 28%,96% 78%,87% 100%,12% 100%,0 72%,3% 20%);
-  background:linear-gradient(145deg,rgba(245,252,255,.12),rgba(185,207,216,.055) 42%,rgba(20,25,34,.1));
-  color:rgba(244,238,242,.82);text-shadow:0 1px 3px rgba(9,4,18,.9);
-  box-shadow:inset 0 1px rgba(255,255,255,.17),inset 0 -5px 10px rgba(8,14,20,.13),0 2px 5px rgba(2,1,8,.18);
-  backdrop-filter:blur(5px) saturate(.28) brightness(.82);-webkit-backdrop-filter:blur(5px) saturate(.28) brightness(.82);
-  animation:none;
-}
-.glass-keyboard button:before{content:"";position:absolute;z-index:-1;inset:1px;background:linear-gradient(112deg,transparent 18%,rgba(230,246,255,.16) 37%,transparent 55%);clip-path:inherit;opacity:.55;transform:translateX(-115%);animation:keyReflection 7.2s ease-in-out infinite}
-.glass-keyboard .key-row:nth-child(2) button{clip-path:polygon(5% 0,92% 0,100% 22%,95% 100%,10% 100%,0 76%,2% 18%)}
-.glass-keyboard .key-row:nth-child(3) button{clip-path:polygon(12% 0,100% 0,97% 74%,86% 100%,7% 100%,0 66%,4% 17%)}
-.glass-keyboard .key-controls button{clip-path:polygon(6% 0,94% 0,100% 28%,96% 78%,88% 100%,8% 100%,0 70%,2% 20%)}
-.glass-keyboard .key-controls .key-space{clip-path:polygon(3% 0,97% 0,100% 24%,98% 80%,94% 100%,5% 100%,0 72%,1% 18%)}
-.glass-keyboard button:hover,.glass-keyboard button:focus-visible,.glass-keyboard button.latched{border-color:rgba(222,240,246,.55);color:#fff;background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(164,193,209,.09) 48%,rgba(28,39,48,.14));box-shadow:inset 0 1px rgba(255,255,255,.25),0 0 5px rgba(170,211,221,.16)}
-.glass-keyboard button:active{transform:translateY(1px) scale(.97);filter:brightness(1.18)}
-@keyframes softGlassPass{0%,22%{transform:translateX(-115%);opacity:0}38%{opacity:.48}60%,100%{transform:translateX(115%);opacity:0}}
-@keyframes keyReflection{0%,30%{transform:translateX(-115%);opacity:0}43%{opacity:.55}60%,100%{transform:translateX(115%);opacity:0}}
-@media (max-width:600px){.glass-keyboard{left:19.2%;top:76.8%;width:78.4%;height:13%;padding:.8% 1% 1.2%;gap:1.6%}.glass-keyboard button{border-radius:0}}
-@media (prefers-reduced-motion:reduce){.glass-keyboard:before,.glass-keyboard button:before{animation:none!important;opacity:.18;transform:none}}
 .fullscreen-pending:after{content:"TOUCH TO ENTER FULLSCREEN";position:fixed;z-index:50;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);padding:8px 12px;border:1px solid #ff4a9f;background:rgba(21,3,25,.86);color:#ffd1b9;font-size:clamp(7px,1.5vw,11px);letter-spacing:.08em;pointer-events:none;box-shadow:0 0 12px rgba(255,56,151,.55);animation:statusBlink 2.8s ease-in-out infinite;white-space:nowrap}
-.glass-keyboard{position:absolute;z-index:5;left:24.5%;top:77.3%;width:70.5%;height:11.2%;display:grid;grid-template-rows:repeat(4,1fr);gap:1.8%;padding:1.15%;overflow:hidden;border:1px solid rgba(255,94,170,.72);background:linear-gradient(135deg,rgba(255,255,255,.14),transparent 30%),linear-gradient(180deg,rgba(79,13,73,.62),rgba(18,5,27,.82));box-shadow:inset 0 0 20px rgba(97,231,239,.13),0 0 14px rgba(242,55,155,.5);clip-path:polygon(1.2% 0,98.8% 0,100% 8%,100% 92%,98.8% 100%,1.2% 100%,0 92%,0 8%)}
-.glass-keyboard:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(104,239,247,.035) 6px),linear-gradient(105deg,transparent 20%,rgba(255,255,255,.12) 38%,transparent 55%);animation:keyGlass 5s linear infinite}
-.key-row{position:relative;display:flex;justify-content:center;gap:.65%;min-height:0}.key-row:nth-child(2){padding-inline:3%}.key-row:nth-child(3){padding-inline:6%}.glass-keyboard button{position:relative;isolation:isolate;flex:1;min-width:0;min-height:0;padding:0;border:1px solid rgba(255,117,190,.7);border-radius:0;background:linear-gradient(145deg,rgba(255,255,255,.2) 0 8%,transparent 9%),linear-gradient(160deg,rgba(104,239,247,.13),rgba(113,20,100,.32) 48%,rgba(12,6,25,.78));clip-path:polygon(8% 0,92% 0,100% 24%,100% 76%,92% 100%,8% 100%,0 76%,0 24%);color:#ffd9cb;font-size:clamp(5px,.86cqw,13px);text-shadow:0 0 5px #ff58ac;box-shadow:inset 0 1px rgba(255,255,255,.25),0 0 4px rgba(255,55,151,.3);touch-action:manipulation}.glass-keyboard button:before{content:"";position:absolute;z-index:-1;inset:2px;clip-path:polygon(0 0,34% 0,34% 1px,66% 1px,66% 0,100% 0,100% 32%,calc(100% - 1px) 32%,calc(100% - 1px) 68%,100% 68%,100% 100%,66% 100%,66% calc(100% - 1px),34% calc(100% - 1px),34% 100%,0 100%);background:linear-gradient(120deg,#62e6ef,#f2379b 48%,#ff713d);opacity:.55}.key-row:nth-child(even) button:nth-child(even){clip-path:polygon(14% 0,100% 0,100% 72%,88% 100%,0 100%,0 28%)}.key-row:nth-child(odd) button:nth-child(3n){clip-path:polygon(0 0,86% 0,100% 28%,100% 100%,14% 100%,0 72%)}.glass-keyboard button:hover,.glass-keyboard button:focus-visible,.glass-keyboard button.latched{border-color:#68eff7;color:#fff;background:linear-gradient(155deg,rgba(104,239,247,.34),rgba(242,55,155,.42));box-shadow:inset 0 0 7px rgba(104,239,247,.3),0 0 7px rgba(104,239,247,.6);outline:none}.glass-keyboard button:active{transform:translateY(1px) scale(.95);filter:brightness(1.65)}.key-controls .key-space{flex:4;clip-path:polygon(4% 0,96% 0,100% 30%,96% 100%,4% 100%,0 70%)}.key-controls button{flex:1.4}
-@keyframes keyGlass{from{background-position:0 0,-120% 0}to{background-position:0 0,220% 0}}
-@media (prefers-reduced-motion:reduce){.glass-keyboard:before{animation:none!important}}
-.energy-rails{position:absolute;z-index:6;inset:2.2% 2.5%;pointer-events:none;overflow:hidden;clip-path:inset(0)}
-.energy-rails i{position:absolute;top:12%;bottom:12%;width:2px;background:linear-gradient(180deg,transparent,#ff713d 20%,#f2379b 48%,#62e6ef 72%,transparent);opacity:.8;box-shadow:0 0 4px #f2379b,0 0 11px #f2379b;animation:railPulse 2.9s ease-in-out infinite}.energy-rails i:first-child{left:0}.energy-rails i:nth-child(2){right:0;animation-delay:-1.45s}.energy-rails b{position:absolute;left:0;top:8%;width:100%;height:2px;background:linear-gradient(90deg,transparent,#ff713d 42%,#fff0ce 50%,#f2379b 58%,transparent);filter:drop-shadow(0 0 4px #ff4d9f);animation:horizontalSweep 4.2s linear infinite}.energy-rails span{position:absolute;right:1px;top:13%;width:5px;height:9%;border-radius:4px;background:#62e6ef;box-shadow:0 0 5px #62e6ef,0 0 14px #f2379b;animation:verticalSpark 4.8s ease-in-out infinite}
-.tablet-art svg{filter:saturate(1.08) contrast(1.02);animation:tabletCharge 5.2s ease-in-out infinite}.screen:after{content:"";position:absolute;z-index:4;pointer-events:none;inset:0;background:linear-gradient(115deg,transparent 0 34%,rgba(255,255,255,.14) 40%,transparent 46%);transform:translateX(-130%);animation:glassSweep 6.5s ease-in-out infinite}.glass-keyboard{animation:keyboardPulse 3.6s ease-in-out infinite}.glass-keyboard button:nth-child(3n){animation:keyBreath 3.2s ease-in-out infinite}.glass-keyboard button:nth-child(3n+1){animation-delay:-1.4s}
-@keyframes railPulse{0%,100%{opacity:.25;transform:scaleY(.82)}50%{opacity:1;transform:scaleY(1)}}
-@keyframes horizontalSweep{0%{top:8%;transform:translateX(-100%);opacity:0}12%{opacity:1}55%{opacity:.65}100%{top:92%;transform:translateX(100%);opacity:0}}
-@keyframes verticalSpark{0%{top:13%;opacity:0}15%{opacity:1}75%{opacity:.9}100%{top:87%;opacity:0}}
-@keyframes tabletCharge{0%,100%{opacity:.96}50%{opacity:1;filter:saturate(1.2) contrast(1.04) brightness(1.04)}}
-@keyframes glassSweep{0%,18%{transform:translateX(-130%);opacity:0}35%{opacity:1}58%,100%{transform:translateX(130%);opacity:0}}
-@keyframes keyboardPulse{0%,100%{filter:brightness(.95)}50%{filter:brightness(1.15)}}
-@keyframes keyBreath{0%,100%{border-color:rgba(255,117,190,.38)}50%{border-color:rgba(98,230,239,.82);box-shadow:inset 0 0 5px rgba(98,230,239,.2),0 0 5px rgba(242,55,155,.55)}}
-@media (max-width:600px){.energy-rails{inset:1.2% 1.4%}.glass-keyboard{left:24.5%;width:70.5%;padding:1%;gap:1.3%}.glass-keyboard button{border-radius:1px}.screen:after{opacity:.7}}
-@media (prefers-reduced-motion:reduce){.energy-rails i,.energy-rails b,.energy-rails span,.tablet-art svg,.screen:after,.glass-keyboard,.glass-keyboard button{animation:none!important}.energy-rails i{opacity:.6}.energy-rails b{display:none}}
+.energy-rails{position:absolute;z-index:6;inset:0;pointer-events:none;overflow:hidden;contain:layout paint}
+.energy-rails:before,.energy-rails:after{content:"";position:absolute;top:2%;bottom:2%;width:3px;opacity:.72;background:linear-gradient(180deg,transparent 3%,#ff713d 20%,#f2379b 48%,#62e6ef 72%,transparent 97%);box-shadow:0 0 5px #f2379b,0 0 16px rgba(242,55,155,.72);animation:edgeBeacon 2.2s ease-in-out infinite}.energy-rails:before{left:1.2%}.energy-rails:after{right:1.2%;animation-delay:-1.1s}
+.energy-rails i{position:absolute;top:-28%;width:4px;height:28%;opacity:0;background:linear-gradient(180deg,transparent,#fff2c8 28%,#ff713d 45%,#f2379b 72%,transparent);box-shadow:0 0 6px #ff713d,0 0 18px rgba(242,55,155,.8);will-change:transform,opacity;animation:railTravel 3.6s linear infinite}.energy-rails i:first-child{left:1.15%}.energy-rails i:nth-child(2){right:1.15%;animation-delay:-1.8s}
+.energy-rails b{position:absolute;z-index:2;left:5%;top:16.8%;width:90%;height:60%;opacity:.7;background:linear-gradient(90deg,transparent,#62e6ef 20%,#fff4d7 50%,#f2379b 80%,transparent) top/100% 3px no-repeat;filter:drop-shadow(0 0 5px #62e6ef) drop-shadow(0 0 8px rgba(242,55,155,.55));will-change:transform,opacity;animation:screenScanner 4.5s ease-in-out infinite}
+.energy-rails span{position:absolute;z-index:3;left:3%;top:9%;width:1%;height:auto;aspect-ratio:1;border-radius:50%;background:#fff0cf;box-shadow:0 0 4px #fff,0 0 12px #ff713d,0 0 24px #f2379b;will-change:transform,opacity;animation:perimeterSpark 6s linear infinite}
+.tablet-art #UI{animation:uiHeartbeat 3.4s ease-in-out infinite}.screen:after{content:"";position:absolute;z-index:4;pointer-events:none;inset:0;background:linear-gradient(112deg,transparent 34%,rgba(255,255,255,.2) 43%,transparent 52%);transform:translate3d(-130%,0,0);will-change:transform,opacity;animation:glassSweep 5.2s ease-in-out infinite}
+@keyframes edgeBeacon{0%,100%{opacity:.3;transform:scaleY(.88)}50%{opacity:.95;transform:scaleY(1)}}
+@keyframes railTravel{0%{transform:translate3d(0,0,0);opacity:0}12%{opacity:1}82%{opacity:.8}100%{transform:translate3d(0,455%,0);opacity:0}}
+@keyframes screenScanner{0%,8%{transform:translate3d(0,0,0);opacity:0}18%{opacity:.8}78%{opacity:.55}100%{transform:translate3d(0,100%,0);opacity:0}}
+@keyframes perimeterSpark{0%{transform:translate3d(0,0,0);opacity:0}8%{opacity:1}48%{transform:translate3d(9400%,0,0);opacity:.9}52%{transform:translate3d(9400%,0,0);opacity:0}100%{transform:translate3d(0,0,0);opacity:0}}
+@keyframes uiHeartbeat{0%,100%{opacity:.92}50%{opacity:1}}
+@keyframes glassSweep{0%,15%{transform:translate3d(-130%,0,0);opacity:0}34%{opacity:.75}58%,100%{transform:translate3d(130%,0,0);opacity:0}}
+@media (max-width:600px){.energy-rails:before{left:.5%}.energy-rails:after{right:.5%}.energy-rails i:first-child{left:.45%}.energy-rails i:nth-child(2){right:.45%}.energy-rails b{height:2px}.screen:after{opacity:.75}}
+@media (prefers-reduced-motion:reduce){.energy-rails:before,.energy-rails:after,.energy-rails i,.energy-rails b,.energy-rails span,.tablet-art #UI,.screen:after{animation:none!important}.energy-rails:before,.energy-rails:after{opacity:.65}.energy-rails i,.energy-rails b,.energy-rails span{display:none}}
 .icon-btn{padding:0 3px;font-size:clamp(6px,.9cqh,10px)}
 .filters button,.actions button{min-width:0}
 /* Full-bleed tablet: scale from viewport width and crop excess height evenly. */

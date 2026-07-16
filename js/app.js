@@ -28,7 +28,7 @@ const FALLBACK_QUESTIONS = [
 ];
 
 const $ = (selector, root = document) => root.querySelector(selector);
-const state = { questions: [], records: [], active: 0, filter: 'all', query: '', session: null, saveTimer: 0, toastTimer: 0, inputTarget: null, shifted: false };
+const state = { questions: [], records: [], active: 0, filter: 'all', query: '', session: null, saveTimer: 0, toastTimer: 0 };
 const keyFor = id => `pressaux.interview.${id}`;
 
 async function inlineTablet() {
@@ -93,50 +93,6 @@ function toast(message) { const el = $('#toast'); el.textContent = message; el.c
 function download(ext, content, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = `${state.session.id}.${ext}`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 500); }
 function exportText() { download('txt', state.questions.map((q, i) => `${i + 1}. ${q}\n${state.records[i].note || '[No notes]'}${state.records[i].completed ? '\n[COMPLETED]' : ''}`).join('\n\n'), 'text/plain'); }
 
-function buildGlassKeyboard() {
-  const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM,.?'];
-  rows.forEach((letters, row) => {
-    const host = $(`.key-row[data-row="${row + 1}"]`);
-    [...letters].forEach(letter => {
-      const key = document.createElement('button');
-      key.type = 'button'; key.dataset.key = letter; key.textContent = letter;
-      key.setAttribute('aria-label', letter); host.append(key);
-    });
-  });
-}
-
-function writeFromGlassKeyboard(key) {
-  const target = state.inputTarget;
-  if (!target || !target.isConnected) { toast('SELECT A NOTES FIELD'); return; }
-  const start = target.selectionStart ?? target.value.length;
-  const end = target.selectionEnd ?? start;
-  target.value = target.value.slice(0, start) + key + target.value.slice(end);
-  const caret = start + key.length;
-  target.setSelectionRange(caret, caret);
-  target.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-function handleGlassKey(event) {
-  const button = event.target.closest('button');
-  if (!button) return;
-  if (button.dataset.key != null) {
-    const key = state.shifted ? button.dataset.key.toUpperCase() : button.dataset.key.toLowerCase();
-    writeFromGlassKeyboard(key); state.shifted = false;
-  } else if (button.dataset.action === 'backspace') {
-    const target = state.inputTarget;
-    if (!target) return toast('SELECT A NOTES FIELD');
-    const start = target.selectionStart ?? target.value.length, end = target.selectionEnd ?? start;
-    const from = start === end ? Math.max(0, start - 1) : start;
-    target.value = target.value.slice(0, from) + target.value.slice(end);
-    target.setSelectionRange(from, from); target.dispatchEvent(new Event('input', { bubbles: true }));
-  } else if (button.dataset.action === 'enter') {
-    if (state.inputTarget?.matches('textarea')) writeFromGlassKeyboard('\n');
-  } else if (button.dataset.action === 'shift') {
-    state.shifted = !state.shifted;
-  }
-  $('#glassKeyboard [data-action="shift"]').classList.toggle('latched', state.shifted);
-}
-
 function requestAppFullscreen() {
   if (document.fullscreenElement || document.webkitFullscreenElement) return;
   const root = document.documentElement;
@@ -154,17 +110,25 @@ function syncFullscreenState() {
   document.body.classList.toggle('fullscreen-pending', !(document.fullscreenElement || document.webkitFullscreenElement));
 }
 
+function resumeVisualEffects() {
+  if (document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Mobile browsers can suspend CSS animations while backgrounded. Reset their
+  // timelines when the page becomes visible or its orientation changes.
+  document.getAnimations?.().forEach(animation => {
+    animation.currentTime = 0;
+    animation.play();
+  });
+}
+
 function bind() {
   // `click` has the broadest user-activation support for fullscreen. Capture mode
   // runs this before controls while preserving their normal click behavior.
   document.addEventListener('click', requestAppFullscreen, true);
   document.addEventListener('fullscreenchange', syncFullscreenState);
   document.addEventListener('webkitfullscreenchange', syncFullscreenState);
-  document.addEventListener('focusin', event => {
-    if (event.target.matches('#search, .note-area')) state.inputTarget = event.target;
-  });
-  $('#glassKeyboard').addEventListener('pointerdown', event => event.preventDefault());
-  $('#glassKeyboard').addEventListener('click', handleGlassKey);
+  document.addEventListener('visibilitychange', resumeVisualEffects);
+  addEventListener('pageshow', resumeVisualEffects);
+  addEventListener('orientationchange', () => setTimeout(resumeVisualEffects, 120));
   $('#questionList').addEventListener('click', e => { const card = e.target.closest('.question-card'); if (!card) return; const i = +card.dataset.index; if (e.target.closest('.complete')) { state.records[i].completed = !state.records[i].completed; save(); render(); } else if (e.target.closest('.favorite')) { state.records[i].favorite = !state.records[i].favorite; save(); render(); } else activate(i, e.target.closest('.q-text')); });
   $('#questionList').addEventListener('input', e => { if (!e.target.matches('.note-area')) return; const i = +e.target.closest('.question-card').dataset.index; state.records[i].note = e.target.value; save(); $('.note-dot', e.target.closest('.question-card')).textContent = e.target.value ? 'NOTES STORED' : 'NO NOTES'; });
   $('#search').addEventListener('input', e => { state.query = e.target.value.trim().toLowerCase(); render(); });
@@ -181,6 +145,6 @@ function tick() { const now = new Date(), seconds = Math.max(0, Math.floor((Date
 async function init() {
   try { await inlineTablet(); } catch (error) { console.error('Tablet SVG failed to load', error); }
   try { state.questions = extractQuestions(await fetch('assets/sc1.A1_Newscaster_QUESTIONLIST.svg').then(r => { if (!r.ok) throw Error(r.status); return r.text(); })); } catch (error) { console.warn('Using embedded question backup', error); state.questions = [...FALLBACK_QUESTIONS]; }
-  buildGlassKeyboard(); loadSession(); bind(); render(); tick(); setInterval(tick, 1000);
+  loadSession(); bind(); render(); tick(); setInterval(tick, 1000);
 }
 init();
