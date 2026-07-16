@@ -37,3 +37,9 @@ El guardado automático tiene un debounce de 450 ms. Los indicadores son `SAVING
 - `Ctrl/Cmd + S`: guardado inmediato.
 
 Todos los controles admiten ratón, teclado y táctil. `prefers-reduced-motion` desactiva las animaciones decorativas.
+
+## Diagnóstico de animaciones
+
+Los assets se resuelven con `new URL('./assets/...', document.baseURI)`, por lo que funcionan tanto en un servidor local como bajo el subpath `/pressaux-news/` de GitHub Pages. Los errores de red, HTTP o estructura SVG se muestran explícitamente en la consola.
+
+El fallo de las animaciones estaba causado por dos reglas globales de `prefers-reduced-motion` que aplicaban `animation: none !important` y `transition: none !important` a todos los elementos. En equipos con reducción de movimiento activa también desaparecían el feedback funcional y la ráfaga `FX`. Ahora la media query solo detiene bucles decorativos; los estados funcionales permanecen visibles. Las animaciones de `#BG` y `#UI` se habilitan mediante `.svg-ready` dos frames después de insertar el SVG inline, evitando que sus timelines comiencen antes de que existan esas capas.

@@ -30,17 +30,50 @@ const FALLBACK_QUESTIONS = [
 const $ = (selector, root = document) => root.querySelector(selector);
 const state = { questions: [], records: [], active: 0, filter: 'all', query: '', session: null, saveTimer: 0, toastTimer: 0 };
 const keyFor = id => `pressaux.interview.${id}`;
+const assetUrl = file => new URL(`./assets/${file}`, document.baseURI);
+
+async function fetchAsset(file, label) {
+  const url = assetUrl(file);
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+    return await response.text();
+  } catch (error) {
+    console.error(`[PressAux] No se pudo cargar ${label} desde ${url.href}. Comprueba la ruta, el servidor estático y CORS.`, error);
+    throw error;
+  }
+}
 
 async function inlineTablet() {
-  const text = await fetch('assets/sc1.A1_Newscaster_Tablet.svg').then(r => { if (!r.ok) throw Error(r.status); return r.text(); });
-  $('#svgMount').innerHTML = text;
-  const svg = $('#svgMount svg');
+  const text = await fetchAsset('sc1.A1_Newscaster_Tablet.svg', 'el SVG principal de la tablet');
+  const mount = $('#svgMount');
+  mount.innerHTML = text;
+  const svg = $('svg', mount);
+  if (!svg || !$('#BG', svg) || !$('#UI', svg)) {
+    const error = new Error('El SVG principal no contiene <svg>, #BG o #UI después de insertarlo inline.');
+    console.error('[PressAux] El SVG de la tablet se descargó, pero su estructura no es válida para las animaciones.', error);
+    throw error;
+  }
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   svg.setAttribute('focusable', 'false');
   // Illustrator embeds font declarations in the SVG; override them explicitly.
   svg.querySelectorAll('#UI text, #UI tspan').forEach(node =>
     node.style.setProperty('font-family', 'Automatron, monospace', 'important')
   );
+  return svg;
+}
+
+function enableSvgAnimations() {
+  const tablet = $('.tablet');
+  tablet.classList.remove('svg-ready');
+  // Start on the next painted frame: #BG and #UI already exist in the live DOM,
+  // so their CSS animation timelines cannot be consumed before SVG insertion.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    tablet.classList.add('svg-ready');
+    resumeVisualEffects();
+    const running = document.getAnimations?.().filter(animation => animation.playState === 'running').length ?? 0;
+    console.info(`[PressAux] SVG inline listo; animaciones CSS activas: ${running}; modo: ${document.documentElement.dataset.motion}.`);
+  }));
 }
 
 function extractQuestions(svgText) {
@@ -151,8 +184,11 @@ function bind() {
 function tick() { const now = new Date(), seconds = Math.max(0, Math.floor((Date.now() - state.session.startedAt) / 1000)); const elapsed = [seconds / 3600, seconds / 60 % 60, seconds % 60].map(v => String(Math.floor(v)).padStart(2, '0')).join(':'); $('#clock').textContent = now.toLocaleTimeString([], { hour12: false }); $('#clock').dateTime = now.toISOString(); $('#elapsed').textContent = $('#sideElapsed').textContent = elapsed; }
 
 async function init() {
-  try { await inlineTablet(); } catch (error) { console.error('Tablet SVG failed to load', error); }
-  try { state.questions = extractQuestions(await fetch('assets/sc1.A1_Newscaster_QUESTIONLIST.svg').then(r => { if (!r.ok) throw Error(r.status); return r.text(); })); } catch (error) { console.warn('Using embedded question backup', error); state.questions = [...FALLBACK_QUESTIONS]; }
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.dataset.motion = reducedMotion ? 'reduced' : 'full';
+  if (reducedMotion) console.info('[PressAux] prefers-reduced-motion: reduce está activo; se muestran estados estáticos y se detienen únicamente los bucles decorativos.');
+  try { await inlineTablet(); enableSvgAnimations(); } catch (error) { console.error('[PressAux] La tablet seguirá funcionando sin el arte SVG animado.', error); }
+  try { state.questions = extractQuestions(await fetchAsset('sc1.A1_Newscaster_QUESTIONLIST.svg', 'el SVG de preguntas')); } catch (error) { console.warn('[PressAux] Se utilizará el respaldo integrado de 39 preguntas.', error); state.questions = [...FALLBACK_QUESTIONS]; }
   loadSession(); bind(); render(); tick(); setInterval(tick, 1000);
 }
 init();
