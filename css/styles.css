@@ -10,6 +10,43 @@ dialog{max-width:420px;border:1px solid var(--magenta);background:#1d071f;color:
 @media (orientation:portrait){.tablet{width:min(calc(100vw - 12px),62.5vh);height:auto;max-height:calc(100dvh - 12px)}}@media (orientation:landscape) and (min-width:1200px){.side-panel{display:block}}@media (max-width:480px){.stage{padding:3px}.tablet{width:100vw}.screen{padding:7px}.q-row{gap:4px}.filters button:nth-child(2){font-size:0}.filters button:nth-child(2):after{content:'TODO';font-size:7px}.actions button{padding:2px}.screen-head .eyebrow{display:none}}
 @keyframes boot{0%{opacity:0;filter:brightness(3) blur(5px)}60%{opacity:1;filter:brightness(1.4)}100%{filter:drop-shadow(0 0 22px rgba(238,48,143,.28))}}@keyframes scan{from{top:0}to{top:100%}}@keyframes cardscan{from{transform:translateY(0)}to{transform:translateY(65px)}}@keyframes pulse{50%{opacity:.15;transform:scale(.4)}}@keyframes drift{50%{opacity:.94;transform:translateY(2px)}}@keyframes noise{to{transform:translate(2%,1%)}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Glass keyboard v2 — transparent chassis fitted to the supplied green mask. */
+.glass-keyboard{
+  left:19.2%;top:76.8%;width:78.4%;height:13%;padding:.9% 1.1% 1.3%;gap:2%;
+  border:0;background:transparent;box-shadow:none;filter:none;animation:none;
+  clip-path:polygon(0 0,100% 0,100% 63%,95% 63%,89% 88%,85.5% 100%,10% 100%,6% 86%,0 86%);
+}
+.glass-keyboard:before{
+  inset:0;background:linear-gradient(108deg,transparent 15%,rgba(220,239,255,.08) 42%,transparent 62%);
+  opacity:.55;animation:softGlassPass 8s ease-in-out infinite;
+}
+.glass-keyboard .key-row{gap:.7%;padding-inline:0}
+.glass-keyboard .key-row:nth-child(2){padding-inline:2.8% 4%}
+.glass-keyboard .key-row:nth-child(3){padding-inline:6% 7.5%}
+.glass-keyboard .key-controls{padding-inline:3% 11.5%}
+.glass-keyboard button,
+.glass-keyboard .key-row:nth-child(even) button:nth-child(even),
+.glass-keyboard .key-row:nth-child(odd) button:nth-child(3n){
+  position:relative;overflow:hidden;border:1px solid rgba(211,226,240,.28);border-radius:0;
+  clip-path:polygon(9% 0,86% 0,100% 28%,96% 78%,87% 100%,12% 100%,0 72%,3% 20%);
+  background:linear-gradient(145deg,rgba(245,252,255,.12),rgba(185,207,216,.055) 42%,rgba(20,25,34,.1));
+  color:rgba(244,238,242,.82);text-shadow:0 1px 3px rgba(9,4,18,.9);
+  box-shadow:inset 0 1px rgba(255,255,255,.17),inset 0 -5px 10px rgba(8,14,20,.13),0 2px 5px rgba(2,1,8,.18);
+  backdrop-filter:blur(5px) saturate(.28) brightness(.82);-webkit-backdrop-filter:blur(5px) saturate(.28) brightness(.82);
+  animation:none;
+}
+.glass-keyboard button:before{content:"";position:absolute;z-index:-1;inset:1px;background:linear-gradient(112deg,transparent 18%,rgba(230,246,255,.16) 37%,transparent 55%);clip-path:inherit;opacity:.55;transform:translateX(-115%);animation:keyReflection 7.2s ease-in-out infinite}
+.glass-keyboard .key-row:nth-child(2) button{clip-path:polygon(5% 0,92% 0,100% 22%,95% 100%,10% 100%,0 76%,2% 18%)}
+.glass-keyboard .key-row:nth-child(3) button{clip-path:polygon(12% 0,100% 0,97% 74%,86% 100%,7% 100%,0 66%,4% 17%)}
+.glass-keyboard .key-controls button{clip-path:polygon(6% 0,94% 0,100% 28%,96% 78%,88% 100%,8% 100%,0 70%,2% 20%)}
+.glass-keyboard .key-controls .key-space{clip-path:polygon(3% 0,97% 0,100% 24%,98% 80%,94% 100%,5% 100%,0 72%,1% 18%)}
+.glass-keyboard button:hover,.glass-keyboard button:focus-visible,.glass-keyboard button.latched{border-color:rgba(222,240,246,.55);color:#fff;background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(164,193,209,.09) 48%,rgba(28,39,48,.14));box-shadow:inset 0 1px rgba(255,255,255,.25),0 0 5px rgba(170,211,221,.16)}
+.glass-keyboard button:active{transform:translateY(1px) scale(.97);filter:brightness(1.18)}
+@keyframes softGlassPass{0%,22%{transform:translateX(-115%);opacity:0}38%{opacity:.48}60%,100%{transform:translateX(115%);opacity:0}}
+@keyframes keyReflection{0%,30%{transform:translateX(-115%);opacity:0}43%{opacity:.55}60%,100%{transform:translateX(115%);opacity:0}}
+@media (max-width:600px){.glass-keyboard{left:19.2%;top:76.8%;width:78.4%;height:13%;padding:.8% 1% 1.2%;gap:1.6%}.glass-keyboard button{border-radius:0}}
+@media (prefers-reduced-motion:reduce){.glass-keyboard:before,.glass-keyboard button:before{animation:none!important;opacity:.18;transform:none}}
 .fullscreen-pending:after{content:"TOUCH TO ENTER FULLSCREEN";position:fixed;z-index:50;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);padding:8px 12px;border:1px solid #ff4a9f;background:rgba(21,3,25,.86);color:#ffd1b9;font-size:clamp(7px,1.5vw,11px);letter-spacing:.08em;pointer-events:none;box-shadow:0 0 12px rgba(255,56,151,.55);animation:statusBlink 2.8s ease-in-out infinite;white-space:nowrap}
 .glass-keyboard{position:absolute;z-index:5;left:24.5%;top:77.3%;width:70.5%;height:11.2%;display:grid;grid-template-rows:repeat(4,1fr);gap:1.8%;padding:1.15%;overflow:hidden;border:1px solid rgba(255,94,170,.72);background:linear-gradient(135deg,rgba(255,255,255,.14),transparent 30%),linear-gradient(180deg,rgba(79,13,73,.62),rgba(18,5,27,.82));box-shadow:inset 0 0 20px rgba(97,231,239,.13),0 0 14px rgba(242,55,155,.5);clip-path:polygon(1.2% 0,98.8% 0,100% 8%,100% 92%,98.8% 100%,1.2% 100%,0 92%,0 8%)}
 .glass-keyboard:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(104,239,247,.035) 6px),linear-gradient(105deg,transparent 20%,rgba(255,255,255,.12) 38%,transparent 55%);animation:keyGlass 5s linear infinite}
