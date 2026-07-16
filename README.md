@@ -27,7 +27,7 @@ Para modificar preguntas, edite los `tspan` del SVG manteniendo la numeración y
 - `pressaux.activeSession`: id de la sesión activa.
 - `pressaux.interview.<id>`: JSON con `session` (`id`, `name`, `startedAt`, `updatedAt`) y `records` (`note`, `completed`, `favorite`).
 
-El guardado automático tiene un debounce de 450 ms. Los indicadores son `SAVING`, `SAVED` u `OFFLINE`.
+El guardado automático tiene un debounce de 450 ms. Los indicadores son `SAVING`, `SAVED` u `OFFLINE`. El cuarto botón inferior (`FX`) activa una ráfaga visual y no descarga archivos.
 
 ## Teclado
 

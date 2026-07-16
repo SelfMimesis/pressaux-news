@@ -135,7 +135,15 @@ function bind() {
   $('.filters').addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; state.filter = b.dataset.filter; [...b.parentElement.children].forEach(x => x.classList.toggle('selected', x === b)); render(); });
   $('#newSession').onclick = () => { save(true); state.session = freshSession(); state.records = state.questions.map(() => ({ note: '', completed: false, favorite: false })); state.active = 0; localStorage.setItem('pressaux.activeSession', state.session.id); save(true); render(); toast('NEW SESSION CREATED'); };
   $('#deleteSession').onclick = () => $('#confirmDialog').showModal(); $('#confirmDelete').onclick = () => { localStorage.removeItem(keyFor(state.session.id)); state.session = freshSession(); state.records = state.questions.map(() => ({ note: '', completed: false, favorite: false })); localStorage.setItem('pressaux.activeSession', state.session.id); save(true); render(); toast('SESSION DELETED'); };
-  $('#exportTxt').onclick = exportText; $('#exportJson').onclick = () => download('json', JSON.stringify({ ...state.session, questions: state.questions.map((question, i) => ({ number: i + 1, question, ...state.records[i] })) }, null, 2), 'application/json');
+  $('#exportTxt').onclick = exportText;
+  $('#fxBurst').onclick = () => {
+    const tablet = $('.tablet');
+    tablet.classList.remove('fx-burst');
+    void tablet.offsetWidth;
+    tablet.classList.add('fx-burst');
+    setTimeout(() => tablet.classList.remove('fx-burst'), 1500);
+    toast('ENERGY SURGE');
+  };
   $('#copyActive').onclick = async () => { await navigator.clipboard.writeText(`${state.active + 1}. ${state.questions[state.active]}\n${state.records[state.active].note}`); toast('QUESTION + NOTES COPIED'); };
   document.addEventListener('keydown', e => { const mod = e.ctrlKey || e.metaKey; if (mod && e.key.toLowerCase() === 'f') { e.preventDefault(); $('#search').focus(); } else if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); save(true); toast('SESSION SAVED'); } else if (!e.target.matches('textarea,input')) { if (e.key === 'ArrowDown') { e.preventDefault(); activate(state.active + 1); } if (e.key === 'ArrowUp') { e.preventDefault(); activate(state.active - 1); } if (e.key === 'PageDown') { e.preventDefault(); activate(Math.min(38, state.active + 5)); } if (e.key === 'PageUp') { e.preventDefault(); activate(Math.max(0, state.active - 5)); } } });
   addEventListener('online', () => setSaveStatus('SAVED')); addEventListener('offline', () => setSaveStatus('OFFLINE')); addEventListener('beforeunload', () => save(true));
