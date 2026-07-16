@@ -93,7 +93,20 @@ function toast(message) { const el = $('#toast'); el.textContent = message; el.c
 function download(ext, content, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = `${state.session.id}.${ext}`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 500); }
 function exportText() { download('txt', state.questions.map((q, i) => `${i + 1}. ${q}\n${state.records[i].note || '[No notes]'}${state.records[i].completed ? '\n[COMPLETED]' : ''}`).join('\n\n'), 'text/plain'); }
 
+function requestAppFullscreen() {
+  if (document.fullscreenElement || document.webkitFullscreenElement) return;
+  const root = document.documentElement;
+  const request = root.requestFullscreen || root.webkitRequestFullscreen;
+  if (!request) return;
+  Promise.resolve(request.call(root, { navigationUI: 'hide' })).catch(() => {
+    // Browsers may reject fullscreen when device or embedding policy forbids it.
+  });
+}
+
 function bind() {
+  // Fullscreen APIs require a direct user gesture. The first pointer interaction
+  // enters immersive mode while the original control continues receiving input.
+  $('.tablet').addEventListener('pointerdown', requestAppFullscreen, { once: true });
   $('#questionList').addEventListener('click', e => { const card = e.target.closest('.question-card'); if (!card) return; const i = +card.dataset.index; if (e.target.closest('.complete')) { state.records[i].completed = !state.records[i].completed; save(); render(); } else if (e.target.closest('.favorite')) { state.records[i].favorite = !state.records[i].favorite; save(); render(); } else activate(i, e.target.closest('.q-text')); });
   $('#questionList').addEventListener('input', e => { if (!e.target.matches('.note-area')) return; const i = +e.target.closest('.question-card').dataset.index; state.records[i].note = e.target.value; save(); $('.note-dot', e.target.closest('.question-card')).textContent = e.target.value ? 'NOTES STORED' : 'NO NOTES'; });
   $('#search').addEventListener('input', e => { state.query = e.target.value.trim().toLowerCase(); render(); });
