@@ -104,9 +104,9 @@ function requestAppFullscreen() {
 }
 
 function bind() {
-  // Fullscreen APIs require a direct user gesture. The first pointer interaction
-  // enters immersive mode while the original control continues receiving input.
-  $('.tablet').addEventListener('pointerdown', requestAppFullscreen, { once: true });
+  // Fullscreen APIs require a direct user gesture. Every pointer interaction is
+  // eligible, so a tap also restores immersive mode after Esc or a system gesture.
+  document.addEventListener('pointerdown', requestAppFullscreen, { passive: true });
   $('#questionList').addEventListener('click', e => { const card = e.target.closest('.question-card'); if (!card) return; const i = +card.dataset.index; if (e.target.closest('.complete')) { state.records[i].completed = !state.records[i].completed; save(); render(); } else if (e.target.closest('.favorite')) { state.records[i].favorite = !state.records[i].favorite; save(); render(); } else activate(i, e.target.closest('.q-text')); });
   $('#questionList').addEventListener('input', e => { if (!e.target.matches('.note-area')) return; const i = +e.target.closest('.question-card').dataset.index; state.records[i].note = e.target.value; save(); $('.note-dot', e.target.closest('.question-card')).textContent = e.target.value ? 'NOTES STORED' : 'NO NOTES'; });
   $('#search').addEventListener('input', e => { state.query = e.target.value.trim().toLowerCase(); render(); });
