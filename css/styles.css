@@ -12,5 +12,9 @@ dialog{max-width:420px;border:1px solid var(--magenta);background:#1d071f;color:
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 .icon-btn{padding:0 3px;font-size:clamp(6px,.9cqh,10px)}
 .filters button,.actions button{min-width:0}
-@media (max-width:480px){.tablet{width:calc(100vw - 6px)}}
+/* Full-bleed tablet: scale from viewport width and crop excess height evenly. */
+.stage{padding:0;overflow:hidden}.tablet{flex:0 0 100vw;width:100vw;height:auto;max-height:none}.side-panel{display:none!important}
+/* Denser interview cards keep more questions visible inside the SVG screen. */
+.question-card{margin-bottom:4px;padding:5px 6px}.q-row{gap:4px}.q-text{font-size:clamp(8px,1.08cqh,14px);line-height:1.22}.q-num{font-size:clamp(9px,1.2cqh,15px)}.note-dot{margin:3px 0 0 27px;font-size:clamp(6px,.75cqh,9px)}.note-area{min-height:clamp(64px,8cqh,110px);margin-top:5px;padding:6px}
+@media (max-width:480px){.tablet{width:100vw}}
 .tablet-art #UI text,.tablet-art #UI tspan{font-family:Automatron,monospace!important}
